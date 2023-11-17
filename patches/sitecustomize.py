@@ -27,10 +27,10 @@ class GcpModuleFinder(importlib.abc.MetaPathFinder):
 
     def _is_called_from_kaggle_gcp(self):
         import inspect
-        for frame in inspect.stack():
-            if os.path.basename(frame.filename) == self._KAGGLE_GCP_PATH:
-                return True
-        return False
+        return any(
+            os.path.basename(frame.filename) == self._KAGGLE_GCP_PATH
+            for frame in inspect.stack()
+        )
 
     def find_spec(self, fullname, path, target=None):
         if fullname in self._MODULES:
@@ -64,8 +64,7 @@ class GcpModuleLoader(importlib.abc.Loader):
             'google.cloud.vision': kaggle_gcp.init_vision,
             'google.cloud.vision_v1': kaggle_gcp.init_vision
         }
-        monkeypatch_gcp_module = _LOADERS[spec.name]()
-        return monkeypatch_gcp_module
+        return _LOADERS[spec.name]()
 
     def exec_module(self, module):
         pass

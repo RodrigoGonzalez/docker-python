@@ -19,15 +19,15 @@ class UserSessionHTTPHandler(BaseHTTPRequestHandler):
     def get_response(self):
         raise NotImplementedError()
 
-    def do_HEAD(s):
-        s.send_response(200)
+    def do_HEAD(self):
+        self.send_response(200)
 
-    def do_POST(s):
-        s.set_request()
-        s.send_response(200)
-        s.send_header("Content-type", "application/json")
-        s.end_headers()
-        s.wfile.write(json.dumps(s.get_response()).encode("utf-8"))
+    def do_POST(self):
+        self.set_request()
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(self.get_response()).encode("utf-8"))
 
 class TestUserSessionClient(unittest.TestCase):
     SERVER_ADDRESS = urlparse(os.getenv(_KAGGLE_URL_BASE_ENV_VAR_NAME, default="http://127.0.0.1:8001"))

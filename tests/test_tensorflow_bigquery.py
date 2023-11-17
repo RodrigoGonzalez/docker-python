@@ -12,4 +12,4 @@ class TestTensorflowBigQuery(unittest.TestCase):
     def test_matrix_addition(self):
         result = tf.add([1, 2], [3, 4])
         self.assertEqual([2], result.shape)
-        self.assertListEqual([4, 6], [x for x in result.numpy()])
+        self.assertListEqual([4, 6], list(result.numpy()))

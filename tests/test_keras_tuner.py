@@ -27,9 +27,3 @@ class TestKerasTuner(unittest.TestCase):
                 metrics=['accuracy'])
 
             return model
-
-            tuner = RandomSearch(build_model, objective='accuracy', max_trials=1, executions_per_trial=1, seed=1)
-
-            tuner.search(x_train, y_train, epochs=1)
-
-            self.assertEqual(0.4, tuner.get_best_hyperparameters(1)[0].get('dropout_rate'))

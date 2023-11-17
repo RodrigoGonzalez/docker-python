@@ -33,9 +33,8 @@ class KaggleWebClient:
             'Content-type': 'application/json',
             'X-Kaggle-Authorization': f'Bearer {self.jwt_token}',
         }
-        iap_token = os.getenv(_KAGGLE_IAP_TOKEN_ENV_VAR_NAME)
-        if iap_token:
-          self.headers['Authorization'] = f'Bearer {iap_token}'
+        if iap_token := os.getenv(_KAGGLE_IAP_TOKEN_ENV_VAR_NAME):
+            self.headers['Authorization'] = f'Bearer {iap_token}'
 
     def make_post_request(self, data: dict, endpoint: str, timeout: int = TIMEOUT_SECS) -> dict:
         url = f'{self.url_base}{endpoint}'
@@ -58,7 +57,7 @@ class KaggleWebClient:
             raise ConnectionError(
                 'Connection error trying to communicate with service.') from e
         except HTTPError as e:
-            if e.code == 401 or e.code == 403:
+            if e.code in [401, 403]:
                 raise CredentialError(
                     f'Service responded with error code {e.code}.'
                     ' Please ensure you have access to the resource.') from e

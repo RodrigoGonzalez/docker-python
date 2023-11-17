@@ -105,7 +105,7 @@ class Log:
                 Log._GLOBAL_LOG.setLevel(numeric_level)
                 return
 
-        raise ValueError('Invalid log level: %s' % loglevel)
+        raise ValueError(f'Invalid log level: {loglevel}')
 
     @staticmethod
     def _static_init():

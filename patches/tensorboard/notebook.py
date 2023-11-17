@@ -20,9 +20,9 @@ def _tensorboard_magic(line):
     parser = argparse.ArgumentParser()
     parser.add_argument('--logdir', default='/kaggle/working')
     args = parser.parse_args(line.split())
-    
-    iframe_id = 'tensorboard-' + str(uuid.uuid4())
-        
+
+    iframe_id = f'tensorboard-{str(uuid.uuid4())}'
+
     html = """
 <!-- JUPYTER_TENSORBOARD_TEST_MARKER -->
 <script>
@@ -50,7 +50,7 @@ def _tensorboard_magic(line):
     frameBorder="0">
 </iframe>
 """ % (args.logdir, iframe_id, iframe_id)
-    
+
     display(HTML(html))
     
 def load_ipython_extension(ipython):

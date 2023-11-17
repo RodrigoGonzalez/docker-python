@@ -27,15 +27,15 @@ class GcsDatasetsHTTPHandler(BaseHTTPRequestHandler):
     def get_response(self):
         raise NotImplementedError()
 
-    def do_HEAD(s):
-        s.send_response(200)
+    def do_HEAD(self):
+        self.send_response(200)
 
-    def do_POST(s):
-        s.set_request()
-        s.send_response(200)
-        s.send_header("Content-type", "application/json")
-        s.end_headers()
-        s.wfile.write(json.dumps(s.get_response()).encode("utf-8"))
+    def do_POST(self):
+        self.set_request()
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(self.get_response()).encode("utf-8"))
 
 
 class TestDatasets(unittest.TestCase):
@@ -43,6 +43,8 @@ class TestDatasets(unittest.TestCase):
 
     def _test_client(self, client_func, expected_path, expected_body, is_tpu=True, success=True, iap_token=False):
         _request = {}
+
+
 
         class GetGcsPathHandler(GcsDatasetsHTTPHandler):
 
@@ -53,13 +55,14 @@ class TestDatasets(unittest.TestCase):
                 _request['headers'] = self.headers
 
             def get_response(self):
-                if success:
-                    gcs_path = _TPU_GCS_BUCKET if is_tpu else _AUTOML_GCS_BUCKET
-                    return {'result': {
-                        'destinationBucket': gcs_path,
-                        'destinationPath': None}, 'wasSuccessful': "true"}
-                else:
+                if not success:
                     return {'wasSuccessful': "false"}
+
+                gcs_path = _TPU_GCS_BUCKET if is_tpu else _AUTOML_GCS_BUCKET
+                return {'result': {
+                    'destinationBucket': gcs_path,
+                    'destinationPath': None}, 'wasSuccessful': "true"}
+
 
         env = EnvironmentVarGuard()
         env.set(_KAGGLE_USER_SECRETS_TOKEN_ENV_VAR_NAME, _TEST_JWT)

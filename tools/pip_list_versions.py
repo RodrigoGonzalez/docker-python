@@ -12,24 +12,22 @@ def pip_show(package_name, packages=[]):
     result = subprocess.run(['pip', 'show', package_name], stdout=subprocess.PIPE)
     if result.returncode != 0:
         logging.error("pip show %s failed", package_name)
-    
+
     show_stdout = result.stdout.decode("utf-8")
-    print(package_name + "==" + get_version(show_stdout))
+    print(f"{package_name}=={get_version(show_stdout)}")
 
     for dependency in get_dependencies(show_stdout):
         pip_show(dependency, packages=packages)
 
 def get_version(show_stdout):
     for line in show_stdout.split("\n"):
-        m = re.match(r"^Version:\s(?P<version>.+)$", line)
-        if m:
+        if m := re.match(r"^Version:\s(?P<version>.+)$", line):
             return m.group('version')
     return "not found"
 
 def get_dependencies(show_stdout):
     for line in show_stdout.split("\n"):
-        m = re.match(r"^Requires:\s(?P<requires>.+)$", line)
-        if m:
+        if m := re.match(r"^Requires:\s(?P<requires>.+)$", line):
             return m.group('requires').split(', ')
     return []
 

@@ -6,6 +6,6 @@ class TestXvfbwrapper(unittest.TestCase):
     def test_xvfb(self):
         vdisplay = Xvfb()
         vdisplay.start()
-        display_var = ':{}'.format(vdisplay.new_display)
+        display_var = f':{vdisplay.new_display}'
         self.assertEqual(display_var, os.environ['DISPLAY'])
         vdisplay.stop()

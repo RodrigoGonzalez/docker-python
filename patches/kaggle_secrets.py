@@ -78,10 +78,10 @@ class UserSecretsClient():
             return self.get_secret("__gcloud_sdk_auth__")
         except BackendError as backend_error:
             message = str(backend_error.args)
-            if message.find('No user secrets exist') != -1:
-              raise NotFoundError('Google Cloud SDK credential not found.')
+            if 'No user secrets exist' in message:
+                raise NotFoundError('Google Cloud SDK credential not found.')
             else:
-              raise
+                raise
 
     def set_gcloud_credentials(self, project=None, account=None):
         """Set user credentials attached to the current kernel and optionally the project & account name to the `gcloud` CLI.

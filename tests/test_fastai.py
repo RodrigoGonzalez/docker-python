@@ -18,10 +18,11 @@ class TestFastAI(unittest.TestCase):
     def test_tabular(self):
         dls = TabularDataLoaders.from_csv(
             "/input/tests/data/train.csv",
-            cont_names=["pixel"+str(i) for i in range(784)],
+            cont_names=[f"pixel{str(i)}" for i in range(784)],
             y_names='label',
-            procs=[FillMissing, Categorify, Normalize])       
+            procs=[FillMissing, Categorify, Normalize],
+        )
         learn = tabular_learner(dls, layers=[200, 100])
         learn.fit_one_cycle(n_epoch=1)
-        
+
         self.assertGreater(learn.smooth_loss, 0)
